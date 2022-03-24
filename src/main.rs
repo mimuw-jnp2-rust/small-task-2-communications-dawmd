@@ -73,16 +73,9 @@ impl Client {
     // Method should return an error when a connection already exists.
     // The client should send a handshake to the server.
     fn open(&mut self, addr: &str, server: Server) -> CommsResult<()> {
-        // shouldn't the server be taken as a mutable reference here???
-        // todo!()
         if self.connections.contains_key(addr) {
-            // error
             Err(CommsError::ConnectionExists(String::from(addr)))
         } else {
-            // server.receive(Message {
-            //     msg_type: MessageType::Handshake,
-            //     load: self.ip
-            // })?;
             self.connections
                 .insert(String::from(addr), Connection::Open(server));
             self.send(
@@ -130,10 +123,6 @@ impl Client {
     // the `Open` status.
     // #[allow(dead_code)]
     fn is_open(&self, addr: &str) -> bool {
-        // match self.connections.get(addr) {
-        //     Some(Connection::Open(_)) => true,
-        //     _ => false,
-        // }
         matches!(self.connections.get(addr), Some(Connection::Open(_)))
     }
 
@@ -183,7 +172,6 @@ impl Server {
     fn receive(&mut self, msg: Message) -> CommsResult<Response> {
         eprintln!("{} received:\n{}", self.name, msg.content());
 
-        // todo!()
         match msg.msg_type {
             MessageType::Handshake => match self.connected_client {
                 None => {
